@@ -16,6 +16,7 @@ class Device:
         self._battery_life = battery_life
 
 
+
 class Smartphone(Device):
     def call(self):
         print("Телефон звонит")
