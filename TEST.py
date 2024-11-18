@@ -1,30 +1,48 @@
-#4 ВАРИАНТ
+# 4 ВАРИАНТ
 
-Class Course:
-	def __init__ (self, _title, _credits):
-	self._title = _title
-	self._credits = _credits 
-	
-Class OnlineCourse(Course):
-	def __init__ (self, type=true)	
+class Course:
+    def __init__(self, title, credits):
+        self.title = title
+        self.credits = credits
 
-	def start_video_lecture(
-		if type == true 
-		return ("Включить видео курс")
-	)
+    def get_course_info(self):
+        return f"Course: {self.title}, Credits: {self.credits}"
 
-Class OfflineCourse(Course):
-	def __init__ (self, type=false)
 
-	def schedule_classroom(
-		if type == false
-		return ("Срочно вернитесь в класс")  
-	)
+class OnlineCourse(Course):
+    def __init__(self, title, credits):
+        super().__init__(title, credits)
+        self.type = True
 
-Class OutputOnlineCourse(Course)
-	get_course_info(self.title, self.credits, )
-	return (self.title, self.credits)
+    def start_video_lecture(self):
+        if self.type:
+            return "Включить видео курс"
 
-Class OutputOfflineCourse(Course)
-	get_course_info(self.title, self.credits)
-	return (self.title, self.credits)
+
+class OfflineCourse(Course):
+    def __init__(self, title, credits):
+        super().__init__(title, credits)
+        self.type = False
+
+    def schedule_classroom(self):
+        if not self.type:
+            return "Срочно вернитесь в класс"
+
+
+class OutputOnlineCourse(OnlineCourse):
+    def get_course_info(self):
+        return f"Online {super().get_course_info()}"
+
+
+class OutputOfflineCourse(OfflineCourse):
+    def get_course_info(self):
+        return f"Offline {super().get_course_info()}"
+
+online_course = OutputOnlineCourse("Python Basics", 3)
+offline_course = OutputOfflineCourse("Math 101", 5)
+
+print(online_course.get_course_info())  
+print(offline_course.get_course_info())  
+print(online_course.start_video_lecture())  
+print(offline_course.schedule_classroom())  
+
