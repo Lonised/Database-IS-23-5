@@ -20,12 +20,3 @@ class Goalkeeper(Player):
 
 class Team:
     self.name = name
-
-
-
-
-
-
-    
-
-
