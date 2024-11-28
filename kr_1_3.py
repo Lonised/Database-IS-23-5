@@ -1,3 +1,4 @@
+#Variant 2
 class Book:
     def __init__(self, title, author, available):
         self.__title = title
