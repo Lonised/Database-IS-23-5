@@ -1,0 +1,55 @@
+import random
+import matplotlib.pyplot as plt
+import matplotlib.animation as animation
+
+# Функция случайного блуждания
+def random_walk(steps, dimensions=2):
+    position = [0] * dimensions
+    path = [tuple(position)]
+
+    for _ in range(steps):
+        axis = random.randint(0, dimensions - 1)
+        step = random.choice([-1, 1])
+        position[axis] += step
+        path.append(tuple(position))
+
+    return path
+
+# Анимация движения
+def animate(i):
+    if dimensions == 1:
+        line.set_data(range(i), [pos[0] for pos in path[:i]])
+    elif dimensions == 2:
+        line.set_data([pos[0] for pos in path[:i]], [pos[1] for pos in path[:i]])
+    return line,
+
+# Параметры блуждания
+steps = 500
+dimensions = 2  # 1 - одномерное, 2 - двумерное
+
+# Генерация случайного блуждания
+path = random_walk(steps, dimensions)
+
+# Настройка графика
+fig, ax = plt.subplots()
+
+if dimensions == 1:
+    ax.set_title("Одномерное случайное блуждание")
+    ax.set_xlabel("Шаги")
+    ax.set_ylabel("Позиция")
+    ax.set_xlim(0, steps)
+    ax.set_ylim(min([pos[0] for pos in path]) - 10, max([pos[0] for pos in path]) + 10)
+    line, = ax.plot([], [], lw=2)
+
+elif dimensions == 2:
+    ax.set_title("Двумерное случайное блуждание")
+    ax.set_xlabel("X-позиция")
+    ax.set_ylabel("Y-позиция")
+    ax.set_xlim(min([pos[0] for pos in path]) - 10, max([pos[0] for pos in path]) + 10)
+    ax.set_ylim(min([pos[1] for pos in path]) - 10, max([pos[1] for pos in path]) + 10)
+    line, = ax.plot([], [], lw=2)
+
+# Запуск анимации
+ani = animation.FuncAnimation(fig, animate, frames=steps, interval=30, blit=True, repeat=False)
+plt.grid(True)
+plt.show()
