@@ -1,4 +1,5 @@
 import sys
+import os
 import random
 from PyQt6.QtWidgets import QApplication, QMainWindow, QWidget, QGridLayout, QPushButton, QMessageBox, QVBoxLayout, QStackedLayout, QLabel, QHBoxLayout, QTextEdit, QDialog, QSizePolicy # type: ignore
 from PyQt6.QtGui import QFont, QPixmap, QIcon # type: ignore
@@ -26,7 +27,7 @@ class Minesweeper(QMainWindow):
         self.timer.timeout.connect(self.update_timer)
         self.timer.start(1000)  # Обновление каждую секунду
 
-        self.setWindowIcon(QIcon("149.jpg"))
+        self.setWindowIcon(QIcon(r"C:\Users\silis\OneDrive\Desktop\prog\mines\149.jpg"))
         self.setFixedSize(self.sizeHint())
 
     def initUI(self):
@@ -299,7 +300,7 @@ class DifficultyMenu(QMainWindow):
         self.setWindowTitle("Выбор уровня сложности")
         self.setFixedSize(300, 250)  # Slightly taller for better spacing
         
-        self.setWindowIcon(QIcon("149.jpg"))
+        self.setWindowIcon(QIcon(r"C:\Users\silis\OneDrive\Desktop\prog\mines\149.jpg"))
         
         # Main layout
         layout = QVBoxLayout()
@@ -364,12 +365,12 @@ class MainMenu(QMainWindow):
         super().__init__()
         self.setWindowTitle("Сапер")
         self.setGeometry(100, 100, 800, 600)  # Начальный размер окна
-        self.setWindowIcon(QIcon("C:/Users/silis/OneDrive/Desktop/prog/149.jpg"))
+        self.setWindowIcon(QIcon(r"C:\Users\silis\OneDrive\Desktop\prog\mines\149.jpg"))
 
         # Установка фона
         self.background_label = QLabel(self)
         self.background_label.setGeometry(0, 0, self.width(), self.height())
-        pixmap = QPixmap("151.jpg")  # Ваше изображение
+        pixmap = QPixmap(r"C:\Users\silis\OneDrive\Desktop\prog\mines\151.jpg")  # Ваше изображение
         self.background_label.setPixmap(pixmap)
         self.background_label.setScaledContents(True)  # Масштабируем по размеру окна
 
@@ -499,7 +500,7 @@ class MainMenu(QMainWindow):
 
     def resizeEvent(self, event):
         """Обновление размера фонового изображения при изменении размера окна."""
-        pixmap = QPixmap("151.jpg")  # Загрузка фонового изображения
+        pixmap = QPixmap(r"C:\Users\silis\OneDrive\Desktop\prog\mines\151.jpg")  # Загрузка фонового изображения
         if not pixmap.isNull():
             self.background_label.setGeometry(0, 0, self.width(), self.height())
             scaled_pixmap = pixmap.scaled(
@@ -581,21 +582,6 @@ class MainMenu(QMainWindow):
         self.difficulty_menu = DifficultyMenu()
         self.difficulty_menu.show()
         self.close()
-
-
-    def resizeEvent(self, event):
-        # Получаем изображение фона
-        pixmap = self.background_label.pixmap()
-    
-        # Проверяем, что изображение не пустое
-        if pixmap and not pixmap.isNull():
-            self.background_label.setGeometry(0, 0, self.width(), self.height())
-        
-            # Масштабируем изображение с сохранением пропорций и заполняем весь экран
-            scaled_pixmap = pixmap.scaled(self.size(), Qt.AspectRatioMode.KeepAspectRatioByExpanding)
-            self.background_label.setPixmap(scaled_pixmap)
-    
-        super().resizeEvent(event)
 
 
 if __name__ == "__main__":
