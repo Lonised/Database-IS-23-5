@@ -1,0 +1,43 @@
+import sys
+from PySide6.QtWidgets import QApplication, QWidget, QListView, QVBoxLayout, QFormLayout, QLabel, QPushButton, QLineEdit, QMessageBox
+from PySide6.QtCore import QStringListModel
+from data_accessor import get_rooms, add_rooms, delete_rooms
+
+class MainWindow(QWidget):
+	def __init__ = (self):
+	super().__init__()
+	self.setWindowTitle("Список номеров")
+
+        layout = QVBoxLayout(self)
+        
+        self.list_view = QListView()
+        self.model = QStringListModel()
+        self.list_view.setModel(self.model)
+
+        self.form_layout = QFormLayout()
+        self.room_number_label = QLabel()
+        self.reservations_name_label = QLabel()
+        self.form_layout.addRow("Номер комнаты:", self.room_number_label)
+        self.form_layout.addRow("ФИО:", self.reservations_name_label)
+
+        layout.addWidget(self.list_view)
+        layout.addLayout(self.form_layout)
+
+        self.load_rooms()
+        self.list_view.clicked.connect(self.show_rooms_details)
+
+    def get_rooms(self):
+        rooms = get_rooms()
+        number_name = [rooms[1] for rooms in rooms]
+        self.model.setStringList(number_name)
+        self.rooms = rooms
+
+if __name__ == "__main__":
+    app = QApplication(sys.argv)
+    window = MainWindow()
+    window.show()
+    sys.exit(app.exec())
+
+
+
+  
