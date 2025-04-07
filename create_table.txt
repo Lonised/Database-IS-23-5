@@ -1,0 +1,47 @@
+import psycopg2
+
+db_ parameters = (
+	"dbname" = "Students_grades",
+	"username" = "postgres",
+	"password" = "1234",
+	"host" = "localhost",
+	"port" = "5432"
+
+conn = psycopg2.connect(
+    	dbname=DB_NAME,
+    	user=USER,  
+    	password=PASSWORD,  
+    	host=HOST,  
+    	port=PORT  
+)
+
+cursor = conn.cursor()
+
+
+cursor.execute("""
+        CREATE TABLE students (
+        	id SERIAL PRIMARY KEY,
+        	name VARCHAR NOT NULL,
+        	group_name TEXT NOT NULL
+        )
+    """)
+
+
+ cursor.execute("""
+        CREATE TABLE grades (
+            id SERIAL PRIMARY KEY,
+            subject VARCHAR(20) NOT NULL,
+            grade INTEGER NOT NULL REFERENCES students(id)
+        )
+    """)
+
+conn.commit()
+	cursor.close()
+	conn.close()
+    
+if __name__ == "__main__":
+	create_tables() 
+
+
+
+
