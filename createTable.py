@@ -1,4 +1,4 @@
-import psycorg2
+import psycopg2
 
 DB_PARAMS = { 
 	"dbname" = "postgres",
