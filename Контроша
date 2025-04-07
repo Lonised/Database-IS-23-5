@@ -1,0 +1,114 @@
+import psycopg2
+
+class DataAccessor:
+  def __init__(self):
+     db_parametres = {
+        "dbname" = "Hotel",
+        "User" = "postgers",
+        "Password" = "1104"
+     }  
+
+     self.connection = psycopg2.connect(**db_parametres)
+     self.cursor = self.connection.cursor()
+  
+  def insert_new_reservation(self, room_id, guest_name, chech_in, chech_out):
+      self.cursor.execute("""Insert into reservations(room_id, guest_name, chech_in, chech_out)
+                    values
+                    (%s, %s, %s, %s, %s)""")
+      self.connection.commit()
+      self.cursor.close()
+      self.connection.close()
+
+  def select_table(self):
+      self.cursor.execute("""select * from reservations""")
+      
+      self.cursor
+
+
+
+
+
+
+
+
+
+
+
+
+
+import psycopg2
+class CreateTable:
+    def __init__(self):
+      db_parametres = {
+        "dbname" = "Hotel",
+        "User" = "postgers",
+        "Password" = "1104"
+     }  
+
+     self.connection = psycopg2.connect(**db_parametres)
+     self.cursor = self.connection.cursor()
+   
+    def create_table(self):
+        self.cursor.execute("""Create table rooms {
+                                   id serial primary key,
+                                   name varchar(40),
+                                   id serial primary key,
+                                   id serial primary key,
+                           };
+                               Create table reservations {
+                                   id serial primary key,
+                                   room_id int references rooms(id) not null,
+                                   chech_in date not null,
+                                   chech_out date not null 
+                           };
+
+
+
+
+
+
+
+
+
+class AppHotel(QWidget):
+    def __init__(self):
+        super().__init__()
+        self.setWindowTitle("Бронирование номеров в отеле")
+        self.setGeometry(200, 200, 800, 400)
+
+        layout = QVBoxLayout()
+        form_layout = QFormLayout()
+        self.name_input = QLineEdit()
+        form_layout.addRow("Ф.И.О:", self.name_input)
+
+        self.date_input = QDateEdit()
+        self.date_input.setCheck-in(True)
+        form_layout.addRow("Дата заезда:", self.date_input)
+
+        self.date_input_out = QDateEdit()
+        self.date_input_out.setCalendarPopup(True)
+        form_layout.addRow("Дата выезда:", self.date_input_out)
+
+        self.submit_button = QPushButton("Забронировать")
+        self.submit_button.clicked.connect(self.on_submit)
+
+        self.result_label = QLabel("")
+
+        layout.addLayout(form_layout)
+        layout.addWidget(self.submit_button)
+        layout.addWidget(self.result_label)
+
+        self.setLayout(layout)
+
+    def on_submit(self):
+        name = self.name_input.text()
+        check_in = self.date_input.date().toString()
+        check_out = self.date_input_out.date().toString()
+
+        self.result_label.setText(f"Бронирование подтверждено для {name} с {check_in} по {check_out}.")
+
+if __name__ == "__main__":
+    app = QApplication(sys.argv)
+    window = AppHotel()
+    window.show()
+    sys.exit(app.exec_())
