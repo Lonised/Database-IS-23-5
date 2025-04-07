@@ -1,0 +1,43 @@
+Table.py
+
+import sqlite3
+
+# Создаем или подключаемся к базе
+conn = sqlite3.connect("hotel.db")
+cursor = conn.cursor()
+
+# Таблица номеров
+cursor.execute("""
+CREATE TABLE IF NOT EXISTS rooms (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    number TEXT,
+    type TEXT,
+    price_per_night REAL
+)
+""")
+
+# Таблица бронирований
+cursor.execute("""
+CREATE TABLE IF NOT EXISTS reservations (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    room_id INTEGER,
+    guest_name TEXT,
+    check_in TEXT,
+    check_out TEXT,
+    FOREIGN KEY (room_id) REFERENCES rooms (id)
+)
+""")
+
+# Добавим тестовые данные в таблицу rooms (если таблица пуста)
+cursor.execute("SELECT COUNT(*) FROM rooms")
+if cursor.fetchone()[0] == 0:
+    sample_rooms = [
+        ("101", "Single", 50.0),
+        ("102", "Double", 70.0),
+        ("201", "Suite", 120.0)
+    ]
+    cursor.executemany("INSERT INTO rooms (number, type, price_per_night) VALUES (?, ?, ?)", sample_rooms)
+
+conn.commit()
+conn.close()
+print("Таблицы созданы и данные добавлены.")

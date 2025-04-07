@@ -1,0 +1,112 @@
+Window.py
+
+import sys
+from PyQt5.QtWidgets import (
+    QApplication, QWidget, QHBoxLayout, QVBoxLayout,
+    QListWidget, QLabel, QLineEdit, QPushButton, QMessageBox
+)
+
+from assessors import get_all_rooms, get_reservations_by_room, add_reservation, delete_reservation
+
+class HotelGUI(QWidget):
+    def __init__(self):
+        super().__init__()
+        self.setWindowTitle("Бронирование номеров")
+        self.setGeometry(100, 100, 800, 400)
+        self.initUI()
+
+    def initUI(self):
+        layout = QHBoxLayout()
+
+        # Левая панель
+        left_layout = QVBoxLayout()
+        self.filter_input = QLineEdit()
+        self.filter_input.setPlaceholderText("Фильтр по типу...")
+        self.filter_input.textChanged.connect(self.filter_rooms)
+
+        self.room_list = QListWidget()
+        self.room_list.itemClicked.connect(self.load_reservations)
+
+        left_layout.addWidget(self.filter_input)
+        left_layout.addWidget(self.room_list)
+
+        # Правая панель
+        right_layout = QVBoxLayout()
+        self.info_label = QLabel("Выберите номер")
+
+        self.guest_input = QLineEdit()
+        self.guest_input.setPlaceholderText("Имя гостя")
+        self.checkin_input = QLineEdit()
+        self.checkin_input.setPlaceholderText("Дата заезда (YYYY-MM-DD)")
+        self.checkout_input = QLineEdit()
+        self.checkout_input.setPlaceholderText("Дата выезда (YYYY-MM-DD)")
+
+        self.add_button = QPushButton("Добавить бронирование")
+        self.add_button.clicked.connect(self.add_booking)
+
+        self.delete_button = QPushButton("Удалить бронирование")
+        self.delete_button.clicked.connect(self.delete_booking)
+
+        self.reservation_list = QListWidget()
+
+        right_layout.addWidget(self.info_label)
+        right_layout.addWidget(self.guest_input)
+        right_layout.addWidget(self.checkin_input)
+        right_layout.addWidget(self.checkout_input)
+        right_layout.addWidget(self.add_button)
+        right_layout.addWidget(self.delete_button)
+        right_layout.addWidget(QLabel("Список бронирований:"))
+        right_layout.addWidget(self.reservation_list)
+
+        layout.addLayout(left_layout)
+        layout.addLayout(right_layout)
+        self.setLayout(layout)
+
+        self.load_rooms()
+
+    def load_rooms(self):
+        self.room_list.clear()
+        self.rooms = get_all_rooms()
+        for r in self.rooms:
+            self.room_list.addItem(f"{r[0]} | {r[1]} ({r[2]})")
+
+    def filter_rooms(self):
+        text = self.filter_input.text().lower()
+        self.room_list.clear()
+        for r in self.rooms:
+            if text in r[2].lower():
+                self.room_list.addItem(f"{r[0]} | {r[1]} ({r[2]})")
+
+    def load_reservations(self, item):
+        self.reservation_list.clear()
+        self.current_room_id = int(item.text().split(" | ")[0])
+        self.info_label.setText(f"Бронирования для комнаты ID {self.current_room_id}")
+        reservations = get_reservations_by_room(self.current_room_id)
+        for r in reservations:
+            self.reservation_list.addItem(f"{r[0]} | {r[1]} ({r[2]} - {r[3]})")
+
+    def add_booking(self):
+        if not hasattr(self, 'current_room_id'):
+            QMessageBox.warning(self, "Ошибка", "Сначала выберите номер.")
+            return
+        guest = self.guest_input.text()
+        checkin = self.checkin_input.text()
+        checkout = self.checkout_input.text()
+        add_reservation(self.current_room_id, guest, checkin, checkout)
+        self.load_reservations(self.room_list.currentItem())
+
+    def delete_booking(self):
+        selected = self.reservation_list.currentItem()
+        if not selected:
+            QMessageBox.warning(self, "Ошибка", "Выберите бронирование.")
+            return
+        res_id = int(selected.text().split(" | ")[0])
+        delete_reservation(res_id)
+        self.load_reservations(self.room_list.currentItem())
+
+
+if name == '__main__':
+    app = QApplication(sys.argv)
+    win = HotelGUI()
+    win.show()
+    sys.exit(app.exec_())
